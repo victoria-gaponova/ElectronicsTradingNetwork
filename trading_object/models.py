@@ -3,13 +3,13 @@ from django.db import models
 NULLABLE = {"blank": True, "null": True}
 
 
-class TradingNetworkObject(models.Model):
+class TradingObject(models.Model):
     """
        Модель, представляющая объект торговой сети.
 
        Поля:
        - name: Название объекта торговой сети
-       - type_trade_object: Тип торгового объекта (фабрика, розничная сеть, индивидуальный предприниматель)
+       - type_trading_object: Тип торгового объекта (фабрика, розничная сеть, индивидуальный предприниматель)
        - email: Электронная почта объекта торговой сети (уникальное значение)
        - country: Страна объекта торговой сети
        - city: Город объекта торговой сети
@@ -21,7 +21,7 @@ class TradingNetworkObject(models.Model):
 
        Методы:
        - __str__: Метод, возвращающий строковое представление объекта торговой сети (название объекта торговой сети).
-       - trade_object_level: Свойство, возвращающее уровень иерархии объекта торговой сети.
+       - trading_object_level: Свойство, возвращающее уровень иерархии объекта торговой сети.
 
        Константы:
        - FACTORY: Константа, представляющая уровень фабрики (0).
@@ -33,14 +33,14 @@ class TradingNetworkObject(models.Model):
     RETAIL_CHAIN = 1
     INDIVIDUAL_ENTREPRENEUR = 2
 
-    TRADE_OBJECT_CHOICES = (
+    TRADING_OBJECT_CHOICES = (
         (FACTORY, 'Factory'),
         (RETAIL_CHAIN, 'Retail chain'),
         (INDIVIDUAL_ENTREPRENEUR, 'Individual entrepreneur'),
     )
     name = models.CharField(max_length=250, verbose_name='Название объекта торговой сети')
-    type_trade_object = models.IntegerField(
-        choices=TRADE_OBJECT_CHOICES,
+    type_trading_object = models.IntegerField(
+        choices=TRADING_OBJECT_CHOICES,
         verbose_name='Тип торгового объекта',
     )
     email = models.EmailField(unique=True, verbose_name='Электронная почта объекта торговой сети')
@@ -57,7 +57,7 @@ class TradingNetworkObject(models.Model):
         return self.name
 
     @property
-    def trade_object_level(self):
+    def trading_object_level(self):
         """
                 Определяет и возвращает уровень иерархии объекта торговой сети.
 
@@ -65,14 +65,14 @@ class TradingNetworkObject(models.Model):
                     int: Уровень иерархии объекта торговой сети.
                 """
         # Завод всегда находится на 0 уровне
-        if self.type_trade_object == self.FACTORY:
+        if self.type_trading_object == self.FACTORY:
             return 0
 
         # Если поставщик не указан, уровень торгового объекта максимальный из возможных
         if not self.supplier:
             return max(self.RETAIL_CHAIN, self.INDIVIDUAL_ENTREPRENEUR)
         # Уровень торгового объекта определяется в зависимости от поставщика
-        return self.supplier.trade_object_level + 1
+        return self.supplier.trading_object_level + 1
 
 
 class Product(models.Model):
@@ -92,7 +92,7 @@ class Product(models.Model):
     name = models.CharField(max_length=250, verbose_name='Название продукта')
     model = models.CharField(max_length=150, verbose_name='Модель продукта')
     release_date = models.DateField(auto_now_add=True, verbose_name='Дата выхода на рынок')
-    seller = models.ForeignKey(TradingNetworkObject, on_delete=models.CASCADE, related_name='products',
+    seller = models.ForeignKey(TradingObject, on_delete=models.CASCADE, related_name='products',
                                verbose_name='Продавец')
 
     def __str__(self):
