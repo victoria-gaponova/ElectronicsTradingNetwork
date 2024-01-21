@@ -41,13 +41,13 @@ class TradingNetworkObject(models.Model):
     name = models.CharField(max_length=250, verbose_name='Название объекта торговой сети')
     type_trade_object = models.IntegerField(
         choices=TRADE_OBJECT_CHOICES,
-        verbose_name='тип торгового объекта',
+        verbose_name='Тип торгового объекта',
     )
     email = models.EmailField(unique=True, verbose_name='Электронная почта объекта торговой сети')
     country = models.CharField(max_length=150, verbose_name='Страна объекта торговой сети')
     city = models.CharField(max_length=150, verbose_name='Город объекта торговой сети')
     street = models.CharField(max_length=150, verbose_name='Улица объекта торговой сети')
-    house_number = models.CharField(max_length=20, verbose_name='Носер дома объекта торговой сети')
+    house_number = models.CharField(max_length=20, verbose_name='Номер дома объекта торговой сети')
     supplier = models.ForeignKey('self', **NULLABLE, on_delete=models.SET_NULL, related_name='clients',
                                  verbose_name='Поставщик')
     dept = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Задолженность перед поставщиком')
@@ -59,12 +59,7 @@ class TradingNetworkObject(models.Model):
     @property
     def trade_object_level(self):
         """
-                Возвращает уровень иерархии объекта торговой сети.
-
-                Уровень фабрики (FACTORY) - 0.
-                Уровень розничной сети (RETAIL_CHAIN) - 1.
-                Уровень индивидуального предпринимателя (INDIVIDUAL_ENTREPRENEUR) - максимальный уровень между
-                розничной сетью и индивидуальным предпринимателем.
+                Определяет и возвращает уровень иерархии объекта торговой сети.
 
                 Returns:
                     int: Уровень иерархии объекта торговой сети.
