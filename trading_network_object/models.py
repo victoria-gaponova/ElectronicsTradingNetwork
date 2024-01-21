@@ -48,14 +48,13 @@ class TradingNetworkObject(models.Model):
     city = models.CharField(max_length=150, verbose_name='Город объекта торговой сети')
     street = models.CharField(max_length=150, verbose_name='Улица объекта торговой сети')
     house_number = models.CharField(max_length=20, verbose_name='Носер дома объекта торговой сети')
-    supplier = models.ForeignKey('self', **NULLABLE, related_name='clients', verbose_name='Поставщик')
+    supplier = models.ForeignKey('self', **NULLABLE, on_delete=models.SET_NULL, related_name='clients',
+                                 verbose_name='Поставщик')
     dept = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Задолженность перед поставщиком')
     created_at = models.TimeField(auto_now_add=True, verbose_name='Время создания объекта торговой сети')
 
-
     def __str__(self):
         return self.name
-
 
     @property
     def trade_object_level(self):
@@ -81,24 +80,25 @@ class TradingNetworkObject(models.Model):
         return self.supplier.trade_object_level + 1
 
 
-    class Product(models.Model):
-        """
-           Модель, представляющая продукт.
+class Product(models.Model):
+    """
+       Модель, представляющая продукт.
 
-           Поля:
-           - name: Название продукта
-           - model: Модель продукта
-           - release_date: Дата выхода на рынок (автоматически устанавливается при создании)
-           - seller: Ссылка на объект торговой сети, который является продавцом (при удалении продавца, все связанные продукты удаляются)
+       Поля:
+       - name: Название продукта
+       - model: Модель продукта
+       - release_date: Дата выхода на рынок (автоматически устанавливается при создании)
+       - seller: Ссылка на объект торговой сети, который является продавцом (при удалении продавца, все связанные продукты удаляются)
 
-           Методы:
-              __str__: Метод, возвращающий строковое представление продукта (название продукта).
-           """
+       Методы:
+          __str__: Метод, возвращающий строковое представление продукта (название продукта).
+       """
 
-        name = models.CharField(max_length=250, verbose_name='Название продукта')
-        model = models.CharField(max_length=150, verbose_name='Модель продукта')
-        release_date = models.DateField(auto_now_add=True, verbose_name='Дата выхода на рынок')
-        seller = models.ForeignKey(TradingNetworkObject, on_delete=models.CASCADE, verbose_name='Продавец')
+    name = models.CharField(max_length=250, verbose_name='Название продукта')
+    model = models.CharField(max_length=150, verbose_name='Модель продукта')
+    release_date = models.DateField(auto_now_add=True, verbose_name='Дата выхода на рынок')
+    seller = models.ForeignKey(TradingNetworkObject, on_delete=models.CASCADE, related_name='products',
+                               verbose_name='Продавец')
 
-        def __str__(self):
-            return self.name
+    def __str__(self):
+        return self.name
