@@ -16,7 +16,7 @@ class TradingObject(models.Model):
        - street: Улица объекта торговой сети
        - house_number: Номер дома объекта торговой сети
        - supplier: Ссылка на другой объект торговой сети, который является поставщиком (может быть NULL)
-       - dept: Задолженность перед поставщиком (число с фиксированной точностью)
+       - debt: Задолженность перед поставщиком (число с фиксированной точностью)
        - created_at: Время создания объекта торговой сети (автоматически устанавливается при создании)
 
        Методы:
@@ -50,7 +50,7 @@ class TradingObject(models.Model):
     house_number = models.CharField(max_length=20, verbose_name='Номер дома объекта торговой сети')
     supplier = models.ForeignKey('self', **NULLABLE, on_delete=models.SET_NULL, related_name='clients',
                                  verbose_name='Поставщик')
-    dept = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Задолженность перед поставщиком')
+    debt = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Задолженность перед поставщиком')
     created_at = models.TimeField(auto_now_add=True, verbose_name='Время создания объекта торговой сети')
 
     def __str__(self):
