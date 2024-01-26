@@ -90,9 +90,9 @@ class TradingObject(models.Model):
         if self.type_trading_object == self.FACTORY:
             return 0
 
-        # Если поставщик не указан, уровень торгового объекта будет соответствовать типу торгового объекта
+        # Если поставщик не указан, уровень торгового объекта будет считается максимальным.
         if not self.supplier:
-            return self.type_trading_object
+            return max(self.RETAIL_CHAIN, self.INDIVIDUAL_ENTREPRENEUR)
         # Уровень торгового объекта определяется в зависимости от поставщика
         return self.supplier.trading_object_level + 1
 
