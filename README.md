@@ -33,7 +33,7 @@
    ```bash
    python manage.py migrate
    
-6. **Создание суперпользователя:**
+6. **Создайте суперпользователя:**
    ```bash
    python manage.py createsuperuser 
    
