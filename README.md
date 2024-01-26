@@ -17,7 +17,7 @@
    pip install -r requirements.txt
    
 4. **Создайте файл .env в корневой директории проекта и добавьте в него переменные среды, например:**
-   * SECRETKEY='КЛЮЧ DJNAGO ПРОЕКТА'
+   * SECRET_KEY='КЛЮЧ DJNAGO ПРОЕКТА'
    * DOMAIN_NAME='АДРЕС ДОМЕНА'
    * POSTGRES_HOST='ХОСТ БД'
    * POSTGRES_DB='НАЗВАНИЕ БД'
